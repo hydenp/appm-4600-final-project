@@ -22,10 +22,6 @@ def steepest_descent(A: np.array, b: np.array, x0: np.array, tolerance: float, m
     return 1, x0, steps, max_iterations, time.process_time() - start
 
 
-def steepest_descent_2(A, b, param, param1):
-    pass
-
-
 if __name__ == '__main__':
     # Problem formulation
     A = np.array([[4, 3, 0],
@@ -39,9 +35,5 @@ if __name__ == '__main__':
     x0 = x0.T
 
     error_code, x_star, steps, iterations, sd_time = steepest_descent(A, b, x0, 10e-10, 100)
-    print(x_star)
-    print(iterations)
-
-    error_code, x_star, steps, iterations, sd_time = steepest_descent_2(A, b, 10e-10, 100)
     print(x_star)
     print(iterations)
