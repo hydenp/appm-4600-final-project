@@ -35,7 +35,7 @@ for d in DIMENSIONS:
             b = np.random.rand(d, 1)
             x0 = np.random.rand(d, 1)
 
-            err_code, x_star, steps, iterations, cg_time = conjugate_gradient(A, b, x0, 10e-2, len(A) * 2)
+            err_code, x_star, steps, iterations, cg_time, cg_norms = conjugate_gradient(A, b, x0, 10e-2, len(A) * 2)
             print(f'error code: {err_code}')
 
             cg_sum_times += cg_time

@@ -17,7 +17,7 @@ if __name__ == '__main__':
     x0 = np.array([[0, 0, 0]])
     x0 = x0.T
 
-    err_code, x_star, steps, iters, proc_time = conjugate_gradient_2(A, b, 1e-10, 1_000)
+    err_code, x_star, steps, iters, proc_time, cg_norms = conjugate_gradient_2(A, b, 1e-10, 1_000)
     print(x_star)
     print(iters)
 

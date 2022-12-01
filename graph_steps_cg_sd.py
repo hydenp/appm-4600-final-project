@@ -17,8 +17,8 @@ if __name__ == '__main__':
     x0 = np.array([[0, 0, 0]])
     x0 = x0.T
 
-    err_code, x_star, cg_steps, iters, proc_time = conjugate_gradient_2(A, b, 1e-10, 1_000)
-    error_code, x_star, sd_steps, iterations, sd_time = steepest_descent(A, b, x0, 10e-10, 100)
+    err_code, x_star, cg_steps, iters, proc_time, cg_norms = conjugate_gradient_2(A, b, 1e-10, 1_000)
+    error_code, x_star, sd_steps, iterations, sd_time, sd_norms = steepest_descent(A, b, x0, 10e-10, 100)
 
     # plotting the steps
     cg_xs = [x[0] for x in cg_steps]
@@ -54,7 +54,7 @@ if __name__ == '__main__':
     ############################################################################################
     # Remove the first couple steps as those are significantly larger
     # and make last few of sd harder to see
-    REMOVED_STEPS = 3
+    REMOVED_STEPS = 2
 
     cg_xs = [x[0] for x in cg_steps]
     cg_ys = [y[1] for y in cg_steps]
@@ -86,7 +86,7 @@ if __name__ == '__main__':
     #     label = f'({x:.2f}, {y:.2f}, {z:.2f})'
     #     ax.text(x, y, z, label)
 
-    ax.set_title("CG and Steps")
+    # ax.set_title("CG and Steps")
     ax.set_xlabel('x1')
     ax.set_ylabel('x2')
     ax.set_zlabel('x3')

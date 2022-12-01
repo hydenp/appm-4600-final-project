@@ -21,28 +21,28 @@ def conjugate_gradient(A: np.array, b: np.array, x0: np.array, tolerance: float,
     pk = - rk
     xk = x0
     steps = [list(np.reshape(xk, (len(xk), 1)[0]))]
+    norms = []
 
     iterations = 0
     while np.linalg.norm(rk) > tolerance:
 
         if max_iterations is not None and iterations == max_iterations:
-            return 1, xk, steps, iterations, time.process_time() - start_time
+            return 1, xk, steps, iterations, time.process_time() - start_time, norms
 
         A_pk = A @ pk
         pk_A_pk = pk.T @ A_pk
 
-        # alpha = (- rk.T @ pk) / (pk.T @ A_pk)
         alpha = (- rk.T @ pk) / pk_A_pk
         xk = xk + alpha * pk
         rk = A @ xk - b
-        # beta = (rk.T @ A_pk) / (pk.T @ A_pk)
         beta = (rk.T @ A_pk) / pk_A_pk
         pk = - rk + beta * pk
 
         steps.append(list(np.reshape(xk, (len(xk), 1)[0])))
+        norms.append(np.linalg.norm(rk))
         iterations += 1
 
-    return 0, xk, steps, iterations, time.process_time() - start_time
+    return 0, xk, steps, iterations, time.process_time() - start_time, norms
 
 
 def conjugate_gradient_2(A: np.array, b: np.array, tolerance: float, max_iterations: int):
@@ -51,6 +51,7 @@ def conjugate_gradient_2(A: np.array, b: np.array, tolerance: float, max_iterati
     r0 = b
     p0 = r0
     steps = [list(np.reshape(x0, (len(x0), 1)[0]))]
+    norms = []
 
     for j in range(max_iterations):
         A_p = A @ p0
@@ -64,12 +65,13 @@ def conjugate_gradient_2(A: np.array, b: np.array, tolerance: float, max_iterati
         pk = rk + beta * p0
 
         steps.append(list(np.reshape(x0, (len(x0), 1)[0])))
+        norms.append(np.linalg.norm(xk))
 
         if np.linalg.norm(xk - x0) / np.linalg.norm(xk) < tolerance:
-            return 0, xk, steps, j + 1, time.process_time() - start
+            return 0, xk, steps, j + 1, time.process_time() - start, norms
 
         x0 = xk
         p0 = pk
         r0 = rk
 
-    return 0, x0, steps, max_iterations, time.process_time() - start
+    return 0, x0, steps, max_iterations, time.process_time() - start, norms

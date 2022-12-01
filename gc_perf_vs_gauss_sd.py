@@ -9,6 +9,7 @@ from utils import create_matrix
 # dimensions to test
 # DIMENSIONS = [10, 50, 100, 200, 300, 500, 1_000, 2_000, 5_000]
 DIMENSIONS = [10, 50, 100, 200, 300, 500, 1_000]
+# DIMENSIONS = [10, 50, 100, 200, 300, 500]
 
 # testing CG versus gaussian elimination
 condition_numbers = [3, 5, 8, 10, 12, 15]
@@ -25,6 +26,11 @@ cg_avg_iterations = []
 cg_avg_iterations_2 = []
 sd_avg_iterations = []
 
+# store norms decreasing
+cg_avg_norms = []
+cg_avg_norms_2 = []
+sd_avg_norms = []
+
 for d in DIMENSIONS:
 
     print('-----------------------------')
@@ -32,9 +38,9 @@ for d in DIMENSIONS:
 
     # do every experiment 10 times and take the average
     # first index is time, second is iterations
-    cg_sum_stats = [0, 0]
-    cg_sum_stats_2 = [0, 0]
-    sd_sum_stats = [0, 0]
+    cg_sum_stats = [0, 0, 0]
+    cg_sum_stats_2 = [0, 0, 0]
+    sd_sum_stats = [0, 0, 0]
     gauss_sum_stats = 0
     for s in range(NUM_SAMPLES):
         # create random matrices for testing
@@ -47,10 +53,10 @@ for d in DIMENSIONS:
         b = np.random.rand(d, 1)
         x0 = np.random.rand(d, 1)
 
-        # err_code, cg_x_star, steps, cg_iterations, cg_time = conjugate_gradient(A, b, x0, 10e-6, len(A) * 2)
-        err_code, cg_x_star_2, steps, cg_iterations_2, cg_time_2 = conjugate_gradient_2(A, b, 10e-6, len(A) * 2)
+        # err_code, cg_x_star, steps, cg_iterations, cg_time, cg_norms = conjugate_gradient(A, b, x0, 10e-6, len(A) * 2)
+        err_code, cg_x_star_2, steps, cg_iterations_2, cg_time_2, cg_norms_2 = conjugate_gradient_2(A, b, 10e-6, len(A) * 2)
 
-        err_code, sd_x_star, steps, sd_iterations, sd_time = steepest_descent(A, b, x0, 10e-6, len(A) * 2)
+        err_code, sd_x_star, steps, sd_iterations, sd_time, sd_norms = steepest_descent(A, b, x0, 10e-6, len(A) * 2)
 
         x, gauss_time = gaussian_elimination(A, b)
 
@@ -59,9 +65,11 @@ for d in DIMENSIONS:
 
         cg_sum_stats_2[0] += cg_time_2
         cg_sum_stats_2[1] += cg_iterations_2
+        # cg_sum_stats_2[2] += cg_norms_2
 
         sd_sum_stats[0] += sd_time
         sd_sum_stats[1] += sd_iterations
+        # sd_sum_stats[2] += sd_norms
 
         gauss_sum_stats += gauss_time
 
@@ -70,10 +78,15 @@ for d in DIMENSIONS:
     sd_exec_times.append(sd_sum_stats[0] / NUM_SAMPLES)
     gauss_exec_times.append(gauss_sum_stats / NUM_SAMPLES)
 
+    # norms
+    cg_avg_norms_2.append(cg_sum_stats_2[2] / NUM_SAMPLES)
+    sd_avg_norms.append(sd_sum_stats[2] / NUM_SAMPLES)
+
     # cg_avg_iterations.append(cg_sum_stats[1] / NUM_SAMPLES)
     cg_avg_iterations_2.append(cg_sum_stats_2[1] / NUM_SAMPLES)
     sd_avg_iterations.append(sd_sum_stats[1] / NUM_SAMPLES)
 
+# Plotting execution times
 # plt.plot(DIMENSIONS, cg_exec_times, label='cg', marker='o')
 plt.plot(DIMENSIONS, cg_exec_times_2, label='conjugate gradient', linestyle='--', marker='o')
 plt.plot(DIMENSIONS, sd_exec_times, label='steepest descent', linestyle='--', marker='o')
@@ -85,6 +98,7 @@ plt.ylabel('Exec Time in Seconds')
 plt.savefig('cg-vs-gauss-vs-sd-exec-times.png')
 plt.cla()
 
+# Plotting iterations
 # plt.plot(DIMENSIONS, cg_avg_iterations, label='cg', marker='o')
 plt.plot(DIMENSIONS, cg_avg_iterations_2, label='conjugate gradient', linestyle='--', marker='o')
 plt.plot(DIMENSIONS, sd_avg_iterations, label='steepest descent', linestyle='--', marker='o')
@@ -93,3 +107,12 @@ plt.legend(loc='upper left')
 plt.xlabel('Dimension of A')
 plt.ylabel('Iterations')
 plt.savefig('cg-vs-sd-iterations.png')
+
+# Plot Norms
+# TODO: haven't quite figure out how to do this with norms
+# plt.plot(DIMENSIONS, cg_avg_norms_2, label='conjugate gradient', linestyle='--', marker='o')
+# plt.plot(DIMENSIONS, sd_avg_norms, label='steepest descent', linestyle='--', marker='o')
+# plt.legend(loc='upper left')
+# plt.xlabel('Dimension of A')
+# plt.ylabel('Norms of Ax - b')
+# plt.savefig('cg-vs-sd-iterations.png')
