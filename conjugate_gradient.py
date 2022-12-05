@@ -1,7 +1,6 @@
 import time
 
 import numpy as np
-from matplotlib import pyplot as plt
 
 
 # implement the conjugate-gradient method
@@ -42,7 +41,7 @@ def conjugate_gradient(A: np.array, b: np.array, x0: np.array, tolerance: float,
         norms.append(np.linalg.norm(rk))
         iterations += 1
 
-    return 0, xk, steps, iterations, time.process_time() - start_time, norms
+    return 1, xk, steps, iterations, time.process_time() - start_time, norms
 
 
 def conjugate_gradient_2(A: np.array, b: np.array, tolerance: float, max_iterations: int):
@@ -67,6 +66,11 @@ def conjugate_gradient_2(A: np.array, b: np.array, tolerance: float, max_iterati
         steps.append(list(np.reshape(x0, (len(x0), 1)[0])))
         norms.append(np.linalg.norm(xk))
 
+        # check if there is an inf or nan within the step
+        # this means bad residual and need to exit unsuccessfully
+        if sum(np.isnan(steps[-1])) > 0 or sum(np.isinf(steps[-1])) > 0:
+            return 1, xk, steps, j + 1, time.process_time() - start, norms
+
         if np.linalg.norm(xk - x0) / np.linalg.norm(xk) < tolerance:
             return 0, xk, steps, j + 1, time.process_time() - start, norms
 
@@ -74,4 +78,4 @@ def conjugate_gradient_2(A: np.array, b: np.array, tolerance: float, max_iterati
         p0 = pk
         r0 = rk
 
-    return 0, x0, steps, max_iterations, time.process_time() - start, norms
+    return 1, x0, steps, max_iterations, time.process_time() - start, norms
