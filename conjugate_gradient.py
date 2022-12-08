@@ -60,15 +60,22 @@ def conjugate_gradient_2(A: np.array, b: np.array, tolerance: float, max_iterati
         xk = x0 + alpha * p0
         rk = r0 - alpha * A_p
 
+        norm_r = np.linalg.norm(rk)
+        if j > 1 and norm_r > norms[-1]:
+            print(f'norm increasing : failing after {j} iters')
+            return 1, xk, steps, j + 1, time.process_time() - start, norms
+        else:
+            norms.append(norm_r)
+
         beta = rk.T @ rk / norm_r0
         pk = rk + beta * p0
 
         steps.append(list(np.reshape(x0, (len(x0), 1)[0])))
-        norms.append(np.linalg.norm(xk))
 
         # check if there is an inf or nan within the step
         # this means bad residual and need to exit unsuccessfully
         if sum(np.isnan(steps[-1])) > 0 or sum(np.isinf(steps[-1])) > 0:
+            print(f'inf/nan values detected : failing after {j} iters')
             return 1, xk, steps, j + 1, time.process_time() - start, norms
 
         if np.linalg.norm(xk - x0) / np.linalg.norm(xk) < tolerance:
@@ -78,4 +85,5 @@ def conjugate_gradient_2(A: np.array, b: np.array, tolerance: float, max_iterati
         p0 = pk
         r0 = rk
 
+    print(f'max iters reached without solution')
     return 1, x0, steps, max_iterations, time.process_time() - start, norms

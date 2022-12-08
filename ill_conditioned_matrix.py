@@ -1,9 +1,9 @@
-import time
-
 import numpy as np
+import pandas as pd
+import seaborn as sns
 from matplotlib import pyplot as plt
-from scipy import linalg
-from conjugate_gradient import conjugate_gradient
+
+from conjugate_gradient import conjugate_gradient, conjugate_gradient_2
 from utils import create_matrix
 
 # dimensions to test
@@ -11,10 +11,11 @@ from utils import create_matrix
 # DIMENSIONS = [10, 50, 100, 200, 300, 500]
 DIMENSIONS = [10, 50, 100, 200, 300]
 
-condition_numbers = [100, 1_000, 10_000, 50_000, 100_000]
+# condition_numbers = [100, 1_000, 10_000, 50_000, 100_000]
+condition_numbers = [2, 5, 10, 50, 100, 300, 500, 1_000]
 NUM_SAMPLES = 10
 
-exec_times = {}
+failure_rates = []
 for d in DIMENSIONS:
 
     print('-----------------------------')
@@ -28,30 +29,28 @@ for d in DIMENSIONS:
         print(f'condition number: {c * d}')
         for s in range(NUM_SAMPLES):
             # create random matrices for testing
-            A = create_matrix(d, c)
+            A = create_matrix(d, c*d)
             print(f'condition # = {np.linalg.cond(A)}')
 
             # always start at zero x0 = np.random.rand(d, 1)
             b = np.random.rand(d, 1)
             x0 = np.random.rand(d, 1)
 
-            err_code, x_star, steps, iterations, cg_time, cg_norms = conjugate_gradient(A, b, x0, 10e-2, len(A) * 2)
+            err_code, x_star, steps, iterations, cg_time, cg_norms = conjugate_gradient_2(A, b, 10e-2, len(A) * 2)
             print(f'error code: {err_code}')
 
-            cg_sum_times += cg_time
-            cg_success_rate += (err_code == 1)
+            cg_success_rate += err_code
 
-        cond_number_to_cg_exec_times[c * d] = {
-            'time': cg_sum_times / NUM_SAMPLES,
-            'success_rate': cg_success_rate / NUM_SAMPLES
-        }
+        failure_rates.append(
+            [cg_success_rate / NUM_SAMPLES, d, c]
+        )
 
-    exec_times[d] = cond_number_to_cg_exec_times
 
-plt.legend(loc='upper left')
-plt.title(f'Conjugate Gradient with ill-conditioned systems')
-plt.xlabel('Dimension')
-plt.ylabel('Exec Time in Seconds')
+df = pd.DataFrame(failure_rates, columns=['Failure Rate', 'System Dimension', 'Condition Number multiplier'])
 
-plt.savefig('cg-vs-gauss.png')
+sns.color_palette("hls", 8)
+sns.catplot(data=df, x="System Dimension", y="Failure Rate", hue="Condition Number multiplier", kind="bar",
+            palette=sns.color_palette("flare"))
+
+plt.savefig('ill-conditioned-systems-m.png')
 plt.show()
