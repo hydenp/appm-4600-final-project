@@ -12,7 +12,7 @@ from utils import create_matrix
 # DIMENSIONS = [5, 10, 50, 100, 200, 300]
 DIMENSIONS = [5, 10, 50, 100, 200]
 
-NULL_SPACE_PERCENT = [0.01, 0.05, 0.1, 0.2, 0.5]
+NULL_SPACE_PERCENT = [0.01, 0.05, 0.1, 0.2, 0.5, 0.75]
 
 NUM_SAMPLES = 10
 
@@ -43,8 +43,8 @@ for d in DIMENSIONS:
             print(f'condition # = {np.linalg.cond(A)}')
 
             # always start at zero x0 = np.random.rand(d, 1)
-            b = np.random.rand(d, 1)
-            # b = np.zeros((d, 1))
+            # b = np.random.rand(d, 1)
+            b = np.zeros((d, 1))
             # b = np.reshape(eigen, (len(eigen), 1))
 
             err_code, x_star, steps, iterations, cg_time, cg_norms = conjugate_gradient_2(A, b, 10e-2, len(A) * 2)
@@ -53,16 +53,15 @@ for d in DIMENSIONS:
             cg_failure_rate += err_code
 
         failure_rates.append(
-            [cg_failure_rate / NUM_SAMPLES, d, int(p*100)]
+            [cg_failure_rate / NUM_SAMPLES, d, f'{int(p*100)}%']
         )
 
 
-df = pd.DataFrame(failure_rates, columns=['Failure Rate', 'System Dimension', '% Zero Eigen Values'])
+df = pd.DataFrame(failure_rates, columns=['Failure Rate', 'System Dimension', 'Zero Eigen Values as % of System'])
 
 sns.color_palette("hls", 8)
-sns.catplot(data=df, x="System Dimension", y="Failure Rate", hue="% Zero Eigen Values", kind="bar",
+sns.catplot(data=df, x="System Dimension", y="Failure Rate", hue="Zero Eigen Values as % of System", kind="bar",
             palette=sns.color_palette("flare"))
+plt.savefig('./plots/determinant-zero.png')
 plt.show()
-plt.savefig('determinant-zero.png')
-
-plt.show()
+plt.cla()

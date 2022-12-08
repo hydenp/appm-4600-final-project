@@ -39,4 +39,4 @@ if __name__ == '__main__':
     ax.set_ylabel('x2')
     ax.set_zlabel('x3')
     # plt.show()
-    plt.savefig('3d-plot.png', bbox_inches='tight')
+    plt.savefig('./plots/3d-plot.png', bbox_inches='tight')

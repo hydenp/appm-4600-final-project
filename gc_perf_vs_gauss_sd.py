@@ -95,7 +95,7 @@ plt.legend(loc='upper left')
 # plt.title(f'Conjugate Gradient vs Gaussian Elimination vs Steepest Descent Execution times for various dimension systems')
 plt.xlabel('Dimension of A')
 plt.ylabel('Exec Time in Seconds')
-plt.savefig('cg-vs-gauss-vs-sd-exec-times.png')
+plt.savefig('./plots/./plots/cg-vs-gauss-vs-sd-exec-times.png')
 plt.cla()
 
 # Plotting iterations
@@ -106,7 +106,7 @@ plt.legend(loc='upper left')
 # plt.title(f'Conjugate Gradient vs Steepest Descent')
 plt.xlabel('Dimension of A')
 plt.ylabel('Iterations')
-plt.savefig('cg-vs-sd-iterations.png')
+plt.savefig('./plots/./plots/cg-vs-sd-iterations.png')
 
 # Plot Norms
 # TODO: haven't quite figure out how to do this with norms
@@ -115,4 +115,4 @@ plt.savefig('cg-vs-sd-iterations.png')
 # plt.legend(loc='upper left')
 # plt.xlabel('Dimension of A')
 # plt.ylabel('Norms of Ax - b')
-# plt.savefig('cg-vs-sd-iterations.png')
+# plt.savefig('./plots/./plots/cg-vs-sd-iterations.png')

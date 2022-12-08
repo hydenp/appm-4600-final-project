@@ -3,7 +3,7 @@ import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
 
-from conjugate_gradient import conjugate_gradient, conjugate_gradient_2
+from conjugate_gradient import conjugate_gradient_2
 from utils import create_matrix
 
 # dimensions to test
@@ -52,5 +52,5 @@ sns.color_palette("hls", 8)
 sns.catplot(data=df, x="System Dimension", y="Failure Rate", hue="Condition Number multiplier", kind="bar",
             palette=sns.color_palette("flare"))
 
-plt.savefig('ill-conditioned-systems-m.png')
+plt.savefig('./plots/ill-conditioned-systems-multiplier.png')
 plt.show()

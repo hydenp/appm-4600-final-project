@@ -48,7 +48,7 @@ if __name__ == '__main__':
     ax.set_ylabel('x2')
     ax.set_zlabel('x3')
     # plt.show()
-    plt.savefig('3d-cg-sd-plot.png', bbox_inches='tight')
+    plt.savefig('./plots/3d-cg-sd-plot.png', bbox_inches='tight')
     plt.cla()
 
     ############################################################################################
@@ -91,6 +91,6 @@ if __name__ == '__main__':
     ax.set_ylabel('x2')
     ax.set_zlabel('x3')
     # plt.show()
-    plt.savefig(f'3d-cg-sd-plot-remove-{REMOVED_STEPS}-steps.png', bbox_inches='tight')
+    plt.savefig(f'./plots/3d-cg-sd-plot-remove-{REMOVED_STEPS}-steps.png', bbox_inches='tight')
 
 
