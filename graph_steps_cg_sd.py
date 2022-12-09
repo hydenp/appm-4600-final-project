@@ -3,6 +3,7 @@ from matplotlib import pyplot as plt
 
 from conjugate_gradient import conjugate_gradient_2
 from steepest_descent import steepest_descent
+from utils import CG_COLOR, SD_COLOR
 
 if __name__ == '__main__':
 
@@ -31,8 +32,8 @@ if __name__ == '__main__':
 
     fig = plt.figure(figsize=(12, 12), dpi=400)
     ax = fig.add_subplot(111, projection='3d')
-    ax.plot(cg_xs, cg_ys, cg_zs, marker='x', linestyle='--', color='red', label='conjugate gradient')
-    ax.plot(sd_xs, sd_ys, sd_zs, marker='o', linestyle='--', color='blue', label='steepest descent')
+    ax.plot(cg_xs, cg_ys, cg_zs, marker='x', linestyle='--', color=CG_COLOR, label='conjugate gradient')
+    ax.plot(sd_xs, sd_ys, sd_zs, marker='o', linestyle='--', color=SD_COLOR, label='steepest descent')
     ax.legend(loc='upper left')
 
     # add labels for CG points
@@ -54,7 +55,7 @@ if __name__ == '__main__':
     ############################################################################################
     # Remove the first couple steps as those are significantly larger
     # and make last few of sd harder to see
-    REMOVED_STEPS = 2
+    REMOVED_STEPS = 3
 
     cg_xs = [x[0] for x in cg_steps]
     cg_ys = [y[1] for y in cg_steps]
@@ -74,8 +75,8 @@ if __name__ == '__main__':
 
     fig = plt.figure(figsize=(12, 12), dpi=400)
     ax = fig.add_subplot(111, projection='3d')
-    ax.plot(cg_xs, cg_ys, cg_zs, marker='x', linestyle='--', color='red', label='conjugate gradient')
-    ax.plot(sd_xs, sd_ys, sd_zs, marker='o', linestyle='--', color='blue', label='steepest descent')
+    ax.plot(cg_xs, cg_ys, cg_zs, marker='x', linestyle='--', color=CG_COLOR, label='conjugate gradient')
+    ax.plot(sd_xs, sd_ys, sd_zs, marker='o', linestyle='--', color=SD_COLOR, label='steepest descent')
     ax.legend(loc='upper left')
 
     for x, y, z in zip(cg_xs, cg_ys, cg_zs):

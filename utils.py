@@ -1,6 +1,15 @@
 import numpy as np
+import seaborn as sns
 
 
+# Create color palette for global use
+COLOR_PALETTE = sns.color_palette('flare').as_hex()
+CG_COLOR = COLOR_PALETTE[1]
+SD_COLOR = COLOR_PALETTE[3]
+GE_COLOR = COLOR_PALETTE[5]
+
+
+# functions to create SPD matrix with specced condition number
 # https://stackoverflow.com/questions/38426349/how-to-create-random-orthonormal-matrix-in-python-numpy
 def rvs(dim=3):
     random_state = np.random

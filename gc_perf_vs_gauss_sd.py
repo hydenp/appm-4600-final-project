@@ -4,12 +4,13 @@ from matplotlib import pyplot as plt
 from conjugate_gradient import conjugate_gradient_2
 from gaussian_elimination import gaussian_elimination
 from steepest_descent import steepest_descent
-from utils import create_matrix
+from utils import create_matrix, CG_COLOR, SD_COLOR, GE_COLOR
 
 # dimensions to test
 # DIMENSIONS = [10, 50, 100, 200, 300, 500, 1_000, 2_000, 5_000]
-DIMENSIONS = [10, 50, 100, 200, 300, 500, 1_000]
+# DIMENSIONS = [10, 50, 100, 200, 300, 500, 1_000]
 # DIMENSIONS = [10, 50, 100, 200, 300, 500]
+DIMENSIONS = [10, 50, 100, 200, 300]
 
 # testing CG versus gaussian elimination
 condition_numbers = [3, 5, 8, 10, 12, 15]
@@ -87,26 +88,27 @@ for d in DIMENSIONS:
     sd_avg_iterations.append(sd_sum_stats[1] / NUM_SAMPLES)
 
 # Plotting execution times
+
 # plt.plot(DIMENSIONS, cg_exec_times, label='cg', marker='o')
-plt.plot(DIMENSIONS, cg_exec_times_2, label='conjugate gradient', linestyle='--', marker='o')
-plt.plot(DIMENSIONS, sd_exec_times, label='steepest descent', linestyle='--', marker='o')
-plt.plot(DIMENSIONS, gauss_exec_times, label='gaussian elimination', linestyle='--', marker='o')
+plt.plot(DIMENSIONS, cg_exec_times_2, label='conjugate gradient', linestyle='--', marker='o', c=CG_COLOR)
+plt.plot(DIMENSIONS, sd_exec_times, label='steepest descent', linestyle='--', marker='o', c=SD_COLOR)
+plt.plot(DIMENSIONS, gauss_exec_times, label='gaussian elimination', linestyle='--', marker='o', c=GE_COLOR)
 plt.legend(loc='upper left')
 # plt.title(f'Conjugate Gradient vs Gaussian Elimination vs Steepest Descent Execution times for various dimension systems')
 plt.xlabel('Dimension of A')
 plt.ylabel('Exec Time in Seconds')
-plt.savefig('./plots/./plots/cg-vs-gauss-vs-sd-exec-times.png')
+plt.savefig('./plots/cg-vs-gauss-vs-sd-exec-times.png')
 plt.cla()
 
 # Plotting iterations
 # plt.plot(DIMENSIONS, cg_avg_iterations, label='cg', marker='o')
-plt.plot(DIMENSIONS, cg_avg_iterations_2, label='conjugate gradient', linestyle='--', marker='o')
-plt.plot(DIMENSIONS, sd_avg_iterations, label='steepest descent', linestyle='--', marker='o')
+plt.plot(DIMENSIONS, cg_avg_iterations_2, label='conjugate gradient', linestyle='--', marker='o', c=CG_COLOR)
+plt.plot(DIMENSIONS, sd_avg_iterations, label='steepest descent', linestyle='--', marker='o', c=SD_COLOR)
 plt.legend(loc='upper left')
 # plt.title(f'Conjugate Gradient vs Steepest Descent')
 plt.xlabel('Dimension of A')
 plt.ylabel('Iterations')
-plt.savefig('./plots/./plots/cg-vs-sd-iterations.png')
+plt.savefig('./plots/cg-vs-sd-iterations.png')
 
 # Plot Norms
 # TODO: haven't quite figure out how to do this with norms
@@ -115,4 +117,4 @@ plt.savefig('./plots/./plots/cg-vs-sd-iterations.png')
 # plt.legend(loc='upper left')
 # plt.xlabel('Dimension of A')
 # plt.ylabel('Norms of Ax - b')
-# plt.savefig('./plots/./plots/cg-vs-sd-iterations.png')
+# plt.savefig('./plots/cg-vs-sd-iterations.png')

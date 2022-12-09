@@ -4,7 +4,7 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 
 from conjugate_gradient import conjugate_gradient_2
-from utils import create_matrix
+from utils import create_matrix, COLOR_PALETTE
 
 # dimensions to test
 # DIMENSIONS = [10, 50, 100, 200, 300, 500, 1_000, 2_000, 5_000]
@@ -48,9 +48,8 @@ for d in DIMENSIONS:
 
 df = pd.DataFrame(failure_rates, columns=['Failure Rate', 'System Dimension', 'Condition Number multiplier'])
 
-sns.color_palette("hls", 8)
 sns.catplot(data=df, x="System Dimension", y="Failure Rate", hue="Condition Number multiplier", kind="bar",
-            palette=sns.color_palette("flare"))
+            palette=COLOR_PALETTE)
 
 plt.savefig('./plots/ill-conditioned-systems-multiplier.png')
 plt.show()

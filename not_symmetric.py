@@ -4,7 +4,7 @@ import seaborn as sns
 import pandas as pd
 
 from conjugate_gradient import conjugate_gradient_2
-from utils import create_matrix
+from utils import create_matrix, COLOR_PALETTE
 
 # dimensions to test
 # DIMENSIONS = [10, 50, 100, 200, 300, 500, 1_000, 2_000, 5_000]
@@ -93,9 +93,8 @@ print(iterations_until_exit)
 # plot the results
 df = pd.DataFrame(failure_rates, columns=['Failure Rate', 'System Dimension', 'Distance Multiplier'])
 
-sns.color_palette("hls", 8)
 sns.catplot(data=df, x="System Dimension", y="Failure Rate", hue="Distance Multiplier", kind="bar",
-            palette=sns.color_palette("flare"))
+            palette=COLOR_PALETTE)
 plt.savefig(f'./plots/not-symmetric-change-{NUM_REPLACED_VALS}.png')
 plt.show()
 plt.cla()
@@ -105,10 +104,9 @@ plt.cla()
 df = pd.DataFrame(performance_vs,
                   columns=['Proportionate Exec Time Increase vs Sym Case', 'System Dimension', 'Distance Multiplier'])
 
-sns.color_palette("hls", 8)
 sns.catplot(data=df, x="System Dimension", y="Proportionate Exec Time Increase vs Sym Case", hue="Distance Multiplier",
             kind="bar",
-            palette=sns.color_palette("flare"))
+            palette=COLOR_PALETTE)
 plt.savefig(f'./plots/not-symmetric-change-{NUM_REPLACED_VALS}-perf-vs-sym.png')
 plt.show()
 plt.cla()
@@ -119,11 +117,10 @@ df = pd.DataFrame(iterations_vs,
                   columns=['Proportionate # Iterations Increase vs Sym Case', 'System Dimension',
                            'Distance Multiplier'])
 
-sns.color_palette("hls", 8)
 sns.catplot(data=df, x="System Dimension", y="Proportionate # Iterations Increase vs Sym Case",
             hue="Distance Multiplier",
             kind="bar",
-            palette=sns.color_palette("flare"))
+            palette=COLOR_PALETTE)
 plt.savefig(f'./plots/not-symmetric-change-{NUM_REPLACED_VALS}-iters-vs-sym.png')
 plt.show()
 plt.cla()

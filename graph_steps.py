@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from conjugate_gradient import conjugate_gradient_2
-
+from utils import CG_COLOR
 
 if __name__ == '__main__':
 
@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
     fig = plt.figure(figsize=(12, 12), dpi=400)
     ax = fig.add_subplot(111, projection='3d')
-    ax.plot(xs, ys, zs, marker='x', linestyle='--', color='red')
+    ax.plot(xs, ys, zs, marker='x', linestyle='--', color=CG_COLOR)
 
     for x, y, z in zip(xs, ys, zs):
         label = f'({x:.2f}, {y:.2f}, {z:.2f})'
