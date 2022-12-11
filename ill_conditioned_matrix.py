@@ -7,11 +7,9 @@ from conjugate_gradient import conjugate_gradient_2
 from utils import create_matrix, COLOR_PALETTE
 
 # dimensions to test
-# DIMENSIONS = [10, 50, 100, 200, 300, 500, 1_000, 2_000, 5_000]
-# DIMENSIONS = [10, 50, 100, 200, 300, 500]
-DIMENSIONS = [10, 50, 100, 200, 300]
+DIMENSIONS = [10, 20, 50, 100, 200, 300, 500]
+# DIMENSIONS = [10, 20, 50, 100, 200, 300]
 
-# condition_numbers = [100, 1_000, 10_000, 50_000, 100_000]
 condition_numbers = [2, 5, 10, 50, 100, 300, 500, 1_000]
 NUM_SAMPLES = 10
 
@@ -46,10 +44,9 @@ for d in DIMENSIONS:
         )
 
 
-df = pd.DataFrame(failure_rates, columns=['Failure Rate', 'System Dimension', 'Condition Number multiplier'])
+COLUMNS = ['CG Failure Rate', 'System Dimension', 'Condition Number multiplier']
+df = pd.DataFrame(failure_rates, columns=COLUMNS)
+sns.catplot(data=df, x=COLUMNS[1], y=COLUMNS[0], hue=COLUMNS[2], kind="bar", palette=COLOR_PALETTE)
 
-sns.catplot(data=df, x="System Dimension", y="Failure Rate", hue="Condition Number multiplier", kind="bar",
-            palette=COLOR_PALETTE)
-
-plt.savefig('./plots/ill-conditioned-systems-multiplier.png')
+plt.savefig(f'./plots/ill-conditioned-systems-multiplier.png')
 plt.show()

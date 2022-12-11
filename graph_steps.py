@@ -34,7 +34,6 @@ if __name__ == '__main__':
         label = f'({x:.2f}, {y:.2f}, {z:.2f})'
         ax.text(x, y, z, label)
 
-    ax.set_title("CG Steps")
     ax.set_xlabel('x1')
     ax.set_ylabel('x2')
     ax.set_zlabel('x3')

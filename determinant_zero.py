@@ -7,12 +7,10 @@ from conjugate_gradient import conjugate_gradient_2
 from utils import create_matrix, COLOR_PALETTE
 
 # dimensions to test
-# DIMENSIONS = [10, 50, 100, 200, 300, 500, 1_000, 2_000, 5_000]
-# DIMENSIONS = [10, 50, 100, 200, 300, 500]
-# DIMENSIONS = [5, 10, 50, 100, 200, 300]
-DIMENSIONS = [5, 10, 50, 100, 200]
+# DIMENSIONS = [10, 20, 50, 100, 200, 300, 500]
+DIMENSIONS = [5, 20, 10, 50, 100, 200]
 
-NULL_SPACE_PERCENT = [0.01, 0.05, 0.1, 0.2, 0.5, 0.75]
+NULL_SPACE_PERCENT = [0.01, 0.05, 0.1, 0.2, 0.5]
 
 NUM_SAMPLES = 10
 
@@ -33,7 +31,8 @@ for d in DIMENSIONS:
         eigen = np.linspace(1, 1, d)  # note that the condition number here is inconsequential with custom eigen vals
         print(f'num zero eigen values = {int(len(eigen) * p)}')
         for i in range(int((1 - p) * len(eigen)), len(eigen)):
-            eigen[i] = 0
+            eigen[i] = 100_000 * d
+            # eigen[i] = 0
 
         cg_failure_rate = 0
         for s in range(NUM_SAMPLES):
@@ -43,9 +42,7 @@ for d in DIMENSIONS:
             print(f'condition # = {np.linalg.cond(A)}')
 
             # always start at zero x0 = np.random.rand(d, 1)
-            # b = np.random.rand(d, 1)
-            b = np.zeros((d, 1))
-            # b = np.reshape(eigen, (len(eigen), 1))
+            b = np.random.rand(d, 1)
 
             err_code, x_star, steps, iterations, cg_time, cg_norms = conjugate_gradient_2(A, b, 10e-2, len(A) * 2)
             print(f'error code: {err_code}')
@@ -57,10 +54,11 @@ for d in DIMENSIONS:
         )
 
 
-df = pd.DataFrame(failure_rates, columns=['Failure Rate', 'System Dimension', 'Zero Eigen Values as % of System'])
+COLUMNS = ['CG Failure Rate', 'System Dimension', 'Zero Eigen Values as % of System']
+df = pd.DataFrame(failure_rates, columns=COLUMNS)
+sns.catplot(data=df, x=COLUMNS[1], y=COLUMNS[0], hue=COLUMNS[2], kind="bar", palette=COLOR_PALETTE)
 
-sns.catplot(data=df, x="System Dimension", y="Failure Rate", hue="Zero Eigen Values as % of System", kind="bar",
-            palette=COLOR_PALETTE)
-plt.savefig('./plots/determinant-zero.png')
+# plt.savefig(f'./plots/determinant-zero.png')
+plt.savefig(f'./plots/big-eigenvalues.png')
 plt.show()
 plt.cla()

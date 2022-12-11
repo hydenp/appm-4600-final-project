@@ -7,20 +7,21 @@ from conjugate_gradient import conjugate_gradient_2
 from utils import create_matrix, COLOR_PALETTE
 
 # dimensions to test
-# DIMENSIONS = [10, 50, 100, 200, 300, 500, 1_000, 2_000, 5_000]
-# DIMENSIONS = [10, 50, 100, 200, 300, 500]
-DIMENSIONS = [5, 10, 50, 100, 200]
-DISTANCES = [2, 5, 10, 25, 50]
+DIMENSIONS = [10, 20, 50, 100, 200, 300, 500]
+# DIMENSIONS = [5, 10, 20, 50, 100, 200]
+# DIMENSIONS = [5, 10, 20, 50]
+DISTANCE_MULTIPLIERS = [2, 5, 10, 25, 50]
 
 NUM_SAMPLES = 10  # Number of samples run through for each case
 
-NUM_REPLACED_VALS = 6  # however many values or overwritten
+NUM_REPLACED_VALS = 4  # however many values or overwritten
+SUFFIX = f'around-diag-change-{NUM_REPLACED_VALS}'
+# SUFFIX = f'in-corner-change-{NUM_REPLACED_VALS}'
 
 failure_rates = []
 performance_vs = []
 iterations_vs = []
 iterations_until_exit = []  # Not
-
 
 for d in DIMENSIONS:
 
@@ -28,11 +29,11 @@ for d in DIMENSIONS:
     print(f'dimension: {d}')
 
     # do every experiment 10 times and take the average
-    condition_number = 500
+    condition_number = 200
     print(f'condition number: {condition_number}')
 
     iterations_until_failure_per_dist = []
-    for dist in DISTANCES:
+    for dist in DISTANCE_MULTIPLIERS:
 
         cg_failure_rate = 0
         num_iterations = 0
@@ -53,12 +54,20 @@ for d in DIMENSIONS:
             A_save = A  # save a copy of A for running symmetric case
 
             # set one value to a constant, so it's not symmetric anymore
-            A[len(A) - 1][0] *= dist
-            A[len(A) - 1][1] *= dist
-            A[len(A) - 1][2] *= dist
-            A[len(A) - 2][0] *= dist
-            A[len(A) - 2][1] *= dist
-            A[len(A) - 2][2] *= dist
+
+            # bottom corner
+            # A[len(A) - 1][0] *= dist
+            # A[len(A) - 1][1] *= dist
+            # A[len(A) - 2][0] *= dist
+            # A[len(A) - 2][1] *= dist
+
+            # middle
+            ABOVE = False
+
+            A[len(A)//2 - 1 - ABOVE][len(A)//2 - 2 + ABOVE] *= dist
+            A[len(A)//2 - ABOVE][len(A)//2 - 1 + ABOVE] *= dist
+            A[len(A)//2 + 1 - ABOVE][len(A)//2 + ABOVE] *= dist
+            A[len(A)//2 + 2 - ABOVE][len(A)//2 + 1 + ABOVE] *= dist
 
             err_code, x_star, steps, iterations, cg_time, cg_norms = conjugate_gradient_2(A, b, 10e-2, len(A) * 2)
             print(f'error code: {err_code}')
@@ -91,36 +100,29 @@ print(iterations_vs)
 print(iterations_until_exit)
 
 # plot the results
-df = pd.DataFrame(failure_rates, columns=['Failure Rate', 'System Dimension', 'Distance Multiplier'])
+COLUMNS = ['CG Failure Rate', 'System Dimension', 'Distance Multiplier']
+df = pd.DataFrame(failure_rates, columns=COLUMNS)
 
-sns.catplot(data=df, x="System Dimension", y="Failure Rate", hue="Distance Multiplier", kind="bar",
+sns.catplot(data=df, x=COLUMNS[1], y=COLUMNS[0], hue=COLUMNS[2], kind="bar",
             palette=COLOR_PALETTE)
-plt.savefig(f'./plots/not-symmetric-change-{NUM_REPLACED_VALS}.png')
+plt.savefig(f'./plots/not-symmetric-{SUFFIX}.png')
 plt.show()
 plt.cla()
 
 ###
+COLUMNS = ['Proportionate Exec Time Increase vs Sym Case', 'System Dimension', 'Distance Multiplier']
+df = pd.DataFrame(performance_vs, columns=COLUMNS)
+sns.catplot(data=df, x=COLUMNS[1], y=COLUMNS[0], hue=COLUMNS[2], kind="bar", palette=COLOR_PALETTE)
 
-df = pd.DataFrame(performance_vs,
-                  columns=['Proportionate Exec Time Increase vs Sym Case', 'System Dimension', 'Distance Multiplier'])
-
-sns.catplot(data=df, x="System Dimension", y="Proportionate Exec Time Increase vs Sym Case", hue="Distance Multiplier",
-            kind="bar",
-            palette=COLOR_PALETTE)
-plt.savefig(f'./plots/not-symmetric-change-{NUM_REPLACED_VALS}-perf-vs-sym.png')
+plt.savefig(f'./plots/not-symmetric-perf-vs-sym-{SUFFIX}.png')
 plt.show()
 plt.cla()
 
 ###
+COLUMNS = ['Proportionate # Iterations Increase vs Sym Case', 'System Dimension', 'Distance Multiplier']
+df = pd.DataFrame(iterations_vs, columns=COLUMNS)
+sns.catplot(data=df, x=COLUMNS[1], y=COLUMNS[0], hue=COLUMNS[2], kind="bar", palette=COLOR_PALETTE)
 
-df = pd.DataFrame(iterations_vs,
-                  columns=['Proportionate # Iterations Increase vs Sym Case', 'System Dimension',
-                           'Distance Multiplier'])
-
-sns.catplot(data=df, x="System Dimension", y="Proportionate # Iterations Increase vs Sym Case",
-            hue="Distance Multiplier",
-            kind="bar",
-            palette=COLOR_PALETTE)
-plt.savefig(f'./plots/not-symmetric-change-{NUM_REPLACED_VALS}-iters-vs-sym.png')
+plt.savefig(f'./plots/not-symmetric-iters-vs-sym-{SUFFIX}.png')
 plt.show()
 plt.cla()
