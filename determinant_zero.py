@@ -10,7 +10,7 @@ from utils import create_matrix, COLOR_PALETTE
 # DIMENSIONS = [10, 20, 50, 100, 200, 300, 500]
 DIMENSIONS = [5, 20, 10, 50, 100, 200]
 
-NULL_SPACE_PERCENT = [0.01, 0.05, 0.1, 0.2, 0.5]
+NULL_SPACE_PERCENT = [0.05, 0.1, 0.2, 0.5, 0.75, 0.9]
 
 NUM_SAMPLES = 10
 
@@ -44,7 +44,7 @@ for d in DIMENSIONS:
             # always start at zero x0 = np.random.rand(d, 1)
             b = np.random.rand(d, 1)
 
-            err_code, x_star, steps, iterations, cg_time, cg_norms = conjugate_gradient_2(A, b, 10e-2, len(A) * 2)
+            err_code, x_star, steps, iterations, cg_time, cg_norms = conjugate_gradient_2(A, b, 10e-6, len(A) * 2)
             print(f'error code: {err_code}')
 
             cg_failure_rate += err_code
@@ -54,7 +54,8 @@ for d in DIMENSIONS:
         )
 
 
-COLUMNS = ['CG Failure Rate', 'System Dimension', 'Zero Eigen Values as % of System']
+# COLUMNS = ['CG Failure Rate', 'System Dimension', 'Zero Eigen Values as % of System']
+COLUMNS = ['CG Failure Rate', 'System Dimension', '% Large Eigenvalues']
 df = pd.DataFrame(failure_rates, columns=COLUMNS)
 sns.catplot(data=df, x=COLUMNS[1], y=COLUMNS[0], hue=COLUMNS[2], kind="bar", palette=COLOR_PALETTE)
 

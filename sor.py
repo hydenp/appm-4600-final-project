@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def SOR(A, b, max_iterations=1000, tol=1e-10):
+def SOR(A, b, max_iterations=1_000, tol=1e-6):
     x = np.zeros_like(b)
     iterations = 0
     flops = 0
@@ -20,6 +20,25 @@ def SOR(A, b, max_iterations=1000, tol=1e-10):
         x = x_new
         iterations = iterations + 1
     return 1, x, iterations, flops
+
+
+def SOR_omega(A, b, omega, max_iterations=100, tol=1e-6):
+    x = np.zeros_like(b)
+    flops = 0
+    OmegaPrime = (1 - omega)
+    for iteration in range(1, max_iterations):
+        for i in range(A.shape[0]):
+            sigma = 0
+            for j in range(A.shape[1]):
+                if j != i:
+                    sigma += A[i][j] * x[j]
+                    flops = flops + 2
+                x[i] = OmegaPrime * x[i] + (omega / A[i][i]) * (b[i] - sigma)
+                flops = flops + 5
+            error = np.linalg.norm(np.matmul(A, x) - b)
+            if error < tol:
+                return 0, x, iteration, flops
+    return 1, x, iteration, flops
 
 
 # System
